@@ -1,0 +1,47 @@
+{
+  "parameters": {
+    "orderId": {
+      "source": "payload",
+      "path": "order.id"
+    },
+    "orderAmount": {
+      "source": "payload",
+      "path": "order.details.amount"
+    },
+    "externalValue": {
+      "source": "api",
+      "hostname": "http://api.example.com",
+      "method": "POST",
+      "endpoint": "/fetchValue",
+      "requestBody": {
+        "orderAmount": "$payload.order.details.amount",
+        "currency": "$payload.order.details.currency"
+      },
+      "responsePath": "data.result.value"
+    },
+    "customerDetails": {
+      "source": "api",
+      "hostname": "http://customer.api.com",
+      "method": "GET",
+      "endpoint": "/getCustomerDetails",
+      "queryParams": {
+        "customerId": "$payload.customer.id"
+      },
+      "responsePath": "data.customerInfo"
+    },
+    "filteredItem": {
+      "source": "api",
+      "hostname": "http://inventory.api.com",
+      "method": "GET",
+      "endpoint": "/getInventory",
+      "queryParams": {
+        "productId": "$payload.product.id"
+      },
+      "responsePath": "data.items",
+      "filter": {
+        "key": "itemId",
+        "value": "$payload.order.itemId"
+      }
+    }
+  }
+}
